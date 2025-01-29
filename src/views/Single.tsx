@@ -1,7 +1,5 @@
-// src/views/Single.tsx
-
-import {NavigateFunction, useLocation, useNavigate} from 'react-router-dom';
 import {MediaItem} from 'hybrid-types/DBTypes';
+import {NavigateFunction, useLocation, useNavigate} from 'react-router';
 
 const Single = () => {
   const navigate: NavigateFunction = useNavigate();
@@ -10,7 +8,6 @@ const Single = () => {
   return (
     <>
       <h2>Single</h2>
-
       <h3>{item.title}</h3>
       <p>{new Date(item.created_at).toLocaleString('fi-FI')}</p>
       {item.media_type.includes('image') ? (

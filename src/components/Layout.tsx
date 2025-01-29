@@ -1,6 +1,4 @@
-// src/components/Layout.tsx
-
-import {Link, Outlet} from 'react-router-dom';
+import {Link, Outlet} from 'react-router';
 
 const Layout = () => {
   return (
@@ -23,9 +21,7 @@ const Layout = () => {
         <main>
           <Outlet />
         </main>
-        <footer>
-          <p>&copy; 2025 My App</p>
-        </footer>
+        <footer></footer>
       </div>
     </>
   );

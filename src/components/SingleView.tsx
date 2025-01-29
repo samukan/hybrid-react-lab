@@ -1,26 +1,38 @@
-// src/components/SingleView.tsx
-
-import {MediaItem} from 'hybrid-types/DBTypes';
+import {MediaItemWithOwner} from 'hybrid-types/DBTypes';
 
 const SingleView = (props: {
-  item: MediaItem;
-  setSelectedItem: (item: MediaItem | undefined) => void;
+  item: MediaItemWithOwner | undefined;
+  setSelectedItem: (item: MediaItemWithOwner | undefined) => void;
 }) => {
   const {item, setSelectedItem} = props;
-
+  console.log(item);
   return (
+    // TODO: Add JSX for displaying a mediafile here
+    // - use e.g. a <dialog> element for creating a modal
+    // - use item prop to render the media item details
+    // - use img tag for displaying images
+    // - use video tag for displaying videos
     <dialog open>
-      <h3>{item.title}</h3>
-      <p>{item.description}</p>
-      {item.media_type.includes('image') ? (
-        <img src={item.filename} alt={item.title} />
-      ) : (
-        <video controls src={item.filename} />
+      {item && (
+        <>
+          <button
+            onClick={() => {
+              setSelectedItem(undefined);
+            }}
+          >
+            Close
+          </button>
+          <h3>{item.title}</h3>
+          <p>{new Date(item.created_at).toLocaleString('fi-FI')}</p>
+          {item.media_type.includes('image') ? (
+            <img src={item.filename} alt={item.title} />
+          ) : (
+            <video src={item.filename} controls />
+          )}
+          <p>{item.description}</p>
+        </>
       )}
-      <br />
-      <button onClick={() => setSelectedItem(undefined)}>Close</button>
     </dialog>
   );
 };
-
 export default SingleView;
