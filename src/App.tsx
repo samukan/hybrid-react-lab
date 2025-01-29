@@ -5,7 +5,7 @@ import Profile from './views/Profile';
 import './App.css';
 import Layout from './components/Layout';
 import Single from './views/Single';
-import Login from './views/login';
+import Login from './views/Login';
 
 const App = () => {
   return (
