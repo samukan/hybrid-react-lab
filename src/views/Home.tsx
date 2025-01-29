@@ -19,31 +19,23 @@ const Home = () => {
       try {
         // kaikki mediat ilman omistajan tietoja
         const media = await fetchData<MediaItem[]>(
-          import.meta.env.VITE_MEDIA_API + '/media',
+          import.meta.env.VITE_MEDIA_API + '/media'
         );
         // haetaan omistajat id:n perusteella
         const mediaWithOwner: MediaItemWithOwner[] = await Promise.all(
           media.map(async (item) => {
             const owner = await fetchData<UserWithNoPassword>(
-              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id,
+              // HUOM: media_id päivitetty user_id:ksi
+              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id
             );
 
             const mediaItem: MediaItemWithOwner = {
               ...item,
               username: owner.username,
             };
-
-            /* tän voi poistaa, koska sain bäkin korjattua, nyt sieltä tulee string[] eikä string, päivitä tyypit npm:llä
-            if (
-              mediaItem.screenshots &&
-              typeof mediaItem.screenshots === 'string'
-            ) {
-              mediaItem.screenshots = JSON.parse(mediaItem.screenshots);
-            }
-            */
-
+            // muista päivitää tyypit: 'npm i -D github:ilkkamtk/hybrid-types'
             return mediaItem;
-          }),
+          })
         );
 
         console.log(mediaWithOwner);
