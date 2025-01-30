@@ -7,7 +7,11 @@ import {
   UserWithNoPassword,
 } from 'hybrid-types/DBTypes';
 import {fetchData} from '../lib/functions';
-import {Credentials} from '../types/LocalTypes';
+import {
+  Credentials,
+  RegisterCredentials,
+  RegistrationResponse,
+} from '../types/LocalTypes';
 import {LoginResponse, UserResponse} from 'hybrid-types/MessageTypes';
 
 const useMedia = () => {
@@ -85,7 +89,24 @@ const useUser = () => {
     }
   };
 
-  return {getUserByToken};
+  const postRegister = async (credentials: RegisterCredentials) => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+      headers: {'Content-Type': 'application/json'},
+    };
+    try {
+      const response = await fetchData<RegistrationResponse>(
+        import.meta.env.VITE_AUTH_API + '/users',
+        options
+      );
+      return response;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return {getUserByToken, postRegister};
 };
 
 const useComment = () => {

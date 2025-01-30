@@ -1,5 +1,17 @@
 import {User} from 'hybrid-types/DBTypes';
 
 type Credentials = Pick<User, 'username' | 'password'>;
+type RegisterCredentials = Pick<User, 'username' | 'password' | 'email'>;
 
-export type {Credentials};
+type RegistrationResponse = {
+  message: string;
+  user: {
+    user_id: number;
+    username: string;
+    email: string;
+    created_at: string;
+    level_name: string;
+  };
+};
+
+export type {Credentials, RegisterCredentials, RegistrationResponse};
