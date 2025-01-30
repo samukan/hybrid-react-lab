@@ -8,7 +8,7 @@ import {
 } from 'hybrid-types/DBTypes';
 import {fetchData} from '../lib/functions';
 import {Credentials} from '../types/LocalTypes';
-import {LoginResponse} from 'hybrid-types/MessageTypes';
+import {LoginResponse, UserResponse} from 'hybrid-types/MessageTypes';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
@@ -71,7 +71,21 @@ const useAuthentication = () => {
 };
 
 const useUser = () => {
-  //
+  const getUserByToken = async (token: string) => {
+    const options = {
+      headers: {Authorization: 'Bearer ' + token},
+    };
+    try {
+      return await fetchData<UserResponse>(
+        import.meta.env.VITE_AUTH_API + '/users/token',
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return {getUserByToken};
 };
 
 const useComment = () => {
