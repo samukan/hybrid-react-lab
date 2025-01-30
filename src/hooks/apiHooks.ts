@@ -7,6 +7,8 @@ import {
   UserWithNoPassword,
 } from 'hybrid-types/DBTypes';
 import {fetchData} from '../lib/functions';
+import {Credentials} from '../types/LocalTypes';
+import {LoginResponse} from 'hybrid-types/MessageTypes';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
@@ -48,6 +50,32 @@ const useMedia = () => {
   return {mediaArray};
 };
 
-const useUser = () => {};
+const useAuthentication = () => {
+  const postLogin = async (credentials: Credentials) => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+      headers: {'Content-Type': 'application/json'},
+    };
+    try {
+      return await fetchData<LoginResponse>(
+        import.meta.env.VITE_AUTH_API + '/auth/login',
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
 
-export {useMedia};
+  return {postLogin};
+};
+
+const useUser = () => {
+  //
+};
+
+const useComment = () => {
+  //
+};
+
+export {useMedia, useAuthentication, useUser, useComment};
