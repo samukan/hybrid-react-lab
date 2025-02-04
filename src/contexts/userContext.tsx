@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useState, useEffect} from 'react';
 import {useAuthentication, useUser} from '../hooks/apiHooks';
 import {AuthContextType, Credentials} from '../types/LocalTypes';
 import {useNavigate, useLocation} from 'react-router';
@@ -49,6 +49,10 @@ const UserProvider = ({children}: {children: React.ReactNode}) => {
       console.log((e as Error).message);
     }
   };
+
+  useEffect(() => {
+    handleAutoLogin();
+  }, []);
 
   return (
     <UserContext.Provider
