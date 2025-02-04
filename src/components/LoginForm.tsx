@@ -1,27 +1,16 @@
-import {useNavigate} from 'react-router';
-import {useAuthentication} from '../hooks/apiHooks';
 import {useForm} from '../hooks/formHooks';
 import {Credentials} from '../types/LocalTypes';
+import {useUserContext} from '../hooks/ContextHooks';
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const {postLogin} = useAuthentication();
-
-  const initValues: Credentials = {
-    username: '',
-    password: '',
-  };
+  const {handleLogin} = useUserContext();
+  const initValues: Credentials = {username: '', password: ''};
 
   const doLogin = async () => {
     try {
-      const loginResult = await postLogin(inputs as Credentials);
-      console.log('loginResult', loginResult);
-      if (loginResult) {
-        localStorage.setItem('token', loginResult.token);
-        navigate('/');
-      }
-    } catch (error) {
-      console.error((error as Error).message);
+      await handleLogin(inputs as Credentials);
+    } catch (e) {
+      console.log((e as Error).message);
     }
   };
 
@@ -42,7 +31,6 @@ const LoginForm = () => {
             id="UserWithLevelname"
             onChange={handleInputChange}
             autoComplete="username"
-            // value={inputs.username}
           />
         </div>
         <div>
@@ -53,7 +41,6 @@ const LoginForm = () => {
             id="loginpassword"
             onChange={handleInputChange}
             autoComplete="current-password"
-            // value={inputs.password}
           />
         </div>
         <button type="submit">Login</button>
