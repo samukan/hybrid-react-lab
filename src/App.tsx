@@ -34,7 +34,14 @@ const App = () => {
                 }
               />
               <Route path="/single" element={<Single />} />
-              <Route path="/login" element={<Login />} />
+              <Route
+                path="/login"
+                element={
+                  <ProtectedRoute publicOnly>
+                    <Login />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/logout" element={<Logout />} />
             </Route>
           </Routes>
