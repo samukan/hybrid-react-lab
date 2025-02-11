@@ -1,3 +1,29 @@
 @import 'tailwindcss';
 
-@theme;
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-gray-50);
+    background-color: var(--color-gray-800);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    max-width: var(--container-7xl);
+    margin: auto;
+    padding: calc(var(--spacing) * 8);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+  }
+}

@@ -1,14 +1,14 @@
 import {ChangeEvent, useRef, useState} from 'react';
 import {useForm} from '../hooks/formHooks';
 import {useFile, useMedia} from '../hooks/apiHooks';
-//import {useNavigate} from 'react-router';
+// import { useNavigate } from 'react-router';
 
 const Upload = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadResult, setUploadResult] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  //const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {postFile} = useFile();
   const {postMedia} = useMedia();
   const initValues = {
@@ -25,21 +25,17 @@ const Upload = () => {
 
   const doUpload = async () => {
     setUploading(true);
-
     console.log(inputs);
     try {
       const token = localStorage.getItem('token');
       if (!file || !token) {
         return;
       }
-      // upload the file to fileserver and post metadata to media api server
+      // Upload the file to the file server and post metadata to the media API server
       const fileResult = await postFile(file, token);
       await postMedia(fileResult, inputs, token);
 
-      // redirect to Home if you want
-      //navigate('/');
-
-      // OR notify user & clear inputs
+      // Optionally, redirect to Home: navigate('/');
       setUploadResult('Media file uploaded!');
       resetForm();
     } catch (e) {
@@ -58,71 +54,102 @@ const Upload = () => {
   const resetForm = () => {
     setInputs(initValues);
     setFile(null);
-    // use fileRef to clear file input field after upload
+    // Clear file input via ref after upload
     if (fileRef.current) {
       fileRef.current.value = '';
     }
   };
 
   return (
-    <>
-      <h1>Upload</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Title</label>
+    <div className="mx-auto max-w-lg rounded-lg bg-gray-900 p-6 text-white shadow-lg">
+      <h1 className="mb-6 text-center text-3xl font-bold">Upload</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Title Field */}
+        <div className="flex flex-col">
+          <label htmlFor="title" className="mb-1 font-medium">
+            Title
+          </label>
           <input
             name="title"
             type="text"
             id="title"
             onChange={handleInputChange}
             value={inputs.title}
+            className="rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-stone-500 focus:outline-none"
           />
         </div>
-        <div>
-          <label htmlFor="description">Description</label>
+        {/* Description Field */}
+        <div className="flex flex-col">
+          <label htmlFor="description" className="mb-1 font-medium">
+            Description
+          </label>
           <textarea
             name="description"
             rows={5}
             id="description"
             onChange={handleInputChange}
             value={inputs.description}
+            className="rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-stone-500 focus:outline-none"
           ></textarea>
         </div>
-        <div>
-          <label htmlFor="file">File</label>
+        {/* File Input */}
+        <div className="flex flex-col">
+          <label htmlFor="file" className="mb-1 font-medium">
+            File
+          </label>
           <input
             name="file"
             type="file"
             id="file"
             accept="image/*, video/*"
             onChange={handleFileChange}
-            // reference for useRef hook
             ref={fileRef}
+            className="file:mr-4 file:rounded file:border-0 file:bg-stone-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-stone-700"
           />
         </div>
-        <img
-          src={
-            file
-              ? URL.createObjectURL(file)
-              : 'https://place-hold.it/200?text=Choose+image'
-          }
-          alt="preview"
-          width="200"
-        />
-        <button
-          type="submit"
-          disabled={
-            file && inputs.title.length > 3 && inputs.description.length > 0
-              ? false
-              : true
-          }
-        >
-          {uploading ? 'Uploading..' : 'Upload'}
-        </button>
-        <button onClick={resetForm}>Reset</button>
-        <p>{uploadResult}</p>
+        {/* Preview */}
+        <div className="flex justify-center">
+          <img
+            src={
+              file
+                ? URL.createObjectURL(file)
+                : 'https://place-hold.it/200?text=Choose+image'
+            }
+            alt="preview"
+            className="h-48 w-48 rounded object-cover"
+          />
+        </div>
+        {/* Buttons */}
+        <div className="flex space-x-4">
+          <button
+            type="submit"
+            disabled={
+              !(
+                file &&
+                inputs.title.length > 3 &&
+                inputs.description.length > 0
+              )
+            }
+            className="flex-1 rounded bg-stone-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {uploading ? 'Uploading...' : 'Upload'}
+          </button>
+          <button
+            type="button"
+            onClick={resetForm}
+            className="flex-1 rounded bg-gray-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-gray-700"
+          >
+            Reset
+          </button>
+        </div>
+        {/* Upload Result */}
+        {uploadResult && (
+          <p className="mt-4 text-center text-sm text-green-400">
+            {uploadResult}
+          </p>
+        )}
       </form>
-    </>
+    </div>
   );
 };
 
