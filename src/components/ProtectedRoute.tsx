@@ -7,18 +7,22 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({children, publicOnly}: ProtectedRouteProps) => {
-  const {user} = useUserContext();
+  const {user, loading} = useUserContext();
   const location = useLocation();
+
+  if (loading) {
+    return null;
+  }
 
   if (publicOnly) {
     if (user) {
-      return <Navigate to="/" replace state={{from: location}} />;
+      return <Navigate to="/" replace />;
     }
     return <>{children}</>;
   }
 
   if (!user) {
-    return <Navigate to="/" replace state={{from: location}} />;
+    return <Navigate to="/login" replace state={{from: location}} />;
   }
 
   return <>{children}</>;

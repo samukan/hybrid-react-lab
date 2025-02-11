@@ -18,7 +18,7 @@ type AuthContextType = {
   user: UserWithNoPassword | null;
   handleLogin: (credentials: Credentials) => void;
   handleLogout: () => void;
-  handleAutoLogin: () => void;
+  loading: boolean;
 };
 
 export type {

@@ -1,17 +1,24 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import {useAuthentication, useUser} from '../hooks/apiHooks';
 import {AuthContextType, Credentials} from '../types/LocalTypes';
-import {useNavigate, useLocation} from 'react-router';
+import {useNavigate} from 'react-router';
 import {UserWithNoPassword} from 'hybrid-types/DBTypes';
 
 const UserContext = createContext<AuthContextType | null>(null);
 
 const UserProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<UserWithNoPassword | null>(null);
+  const [loading, setLoading] = useState(true);
+  const initialLoginAttempted = useRef(false);
   const {postLogin} = useAuthentication();
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleLogin = async (credentials: Credentials) => {
     try {
@@ -36,28 +43,28 @@ const UserProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  const handleAutoLogin = async () => {
+  const handleAutoLogin = useCallback(async () => {
+    if (initialLoginAttempted.current) return;
+    initialLoginAttempted.current = true;
     try {
       const token = localStorage.getItem('token');
       if (token) {
         const userData = await getUserByToken(token);
         setUser(userData.user);
-        const origin = location.state?.from?.pathname || '/';
-        navigate(origin);
       }
     } catch (e) {
       console.log((e as Error).message);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     handleAutoLogin();
-  }, []);
+  }, [handleAutoLogin]);
 
   return (
-    <UserContext.Provider
-      value={{user, handleLogin, handleLogout, handleAutoLogin}}
-    >
+    <UserContext.Provider value={{user, handleLogin, handleLogout, loading}}>
       {children}
     </UserContext.Provider>
   );
