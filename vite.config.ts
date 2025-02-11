@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  // base: '/~samukan/hooks/',
+  // base: '/~samukan/tailwind/',
   base: '',
   test: {
     environment: 'jsdom',
