@@ -1,32 +1,33 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-} from 'react';
+// UserContext.tsx
+import React, {createContext, useState} from 'react';
 import {useAuthentication, useUser} from '../hooks/apiHooks';
 import {AuthContextType, Credentials} from '../types/LocalTypes';
-import {useNavigate} from 'react-router';
+import {useLocation, useNavigate} from 'react-router';
 import {UserWithNoPassword} from 'hybrid-types/DBTypes';
+import {UserResponse} from 'hybrid-types/MessageTypes';
 
 const UserContext = createContext<AuthContextType | null>(null);
 
 const UserProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<UserWithNoPassword | null>(null);
-  const [loading, setLoading] = useState(true);
-  const initialLoginAttempted = useRef(false);
   const {postLogin} = useAuthentication();
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // login, logout and autologin functions are here instead of components
   const handleLogin = async (credentials: Credentials) => {
     try {
-      const loginResponse = await postLogin(credentials);
-      const token = loginResponse.token;
-      localStorage.setItem('token', token);
-      const userData = await getUserByToken(token);
-      setUser(userData.user);
+      // TODO: post login credentials to API
+      const loginResult = await postLogin(credentials);
+      console.log('doLogin result', loginResult);
+      // TODO: set token to local storage
+      if (loginResult) {
+        localStorage.setItem('token', loginResult.token);
+      }
+      // TODO: set user to state
+      setUser(loginResult.user);
+      // TODO: navigate to home
       navigate('/');
     } catch (e) {
       console.log((e as Error).message);
@@ -35,39 +36,47 @@ const UserProvider = ({children}: {children: React.ReactNode}) => {
 
   const handleLogout = () => {
     try {
+      // TODO: remove token from local storage
+      // setItem
       localStorage.removeItem('token');
+      // ...or clear
+      // localStorage.clear();
+      // TODO: set user to null
       setUser(null);
+      // TODO: navigate to home
       navigate('/');
     } catch (e) {
       console.log((e as Error).message);
     }
   };
 
-  const handleAutoLogin = useCallback(async () => {
-    if (initialLoginAttempted.current) return;
-    initialLoginAttempted.current = true;
+  // handleAutoLogin is used when the app is loaded to check if there is a valid token in local storage
+  const handleAutoLogin = async () => {
     try {
+      // TODO: get token from local storage
       const token = localStorage.getItem('token');
-      if (token) {
-        const userData = await getUserByToken(token);
-        setUser(userData.user);
+      // TODO: if token exists, get user data from API
+      if (!token) {
+        return;
       }
+      const userResponse: UserResponse = await getUserByToken(token);
+      // TODO: set user to state
+      setUser(userResponse.user);
+      // when page is refreshed, the user is redirected to origin (see ProtectedRoute.tsx)
+      const origin = location.state.from.pathname || '/';
+      navigate(origin);
     } catch (e) {
+      // alert('Token not valid');
       console.log((e as Error).message);
-    } finally {
-      setLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    handleAutoLogin();
-  }, [handleAutoLogin]);
+  };
 
   return (
-    <UserContext.Provider value={{user, handleLogin, handleLogout, loading}}>
+    <UserContext.Provider
+      value={{user, handleLogin, handleLogout, handleAutoLogin}}
+    >
       {children}
     </UserContext.Provider>
   );
 };
-
 export {UserProvider, UserContext};
