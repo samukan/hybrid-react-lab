@@ -1,6 +1,6 @@
 # LINKKI VERKKOLEVYLLE
 
-https://users.metropolia.fi/~samukan/upload
+https://users.metropolia.fi/~samukan/tailwind
 
 # React + TypeScript + Vite
 
