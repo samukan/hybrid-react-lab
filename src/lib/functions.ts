@@ -2,7 +2,7 @@ import {ErrorResponse} from 'hybrid-types/MessageTypes';
 
 const fetchData = async <T>(
   url: string,
-  options: RequestInit = {},
+  options: RequestInit = {}
 ): Promise<T> => {
   console.log('fetching data from url: ', url);
   const response = await fetch(url, options);
