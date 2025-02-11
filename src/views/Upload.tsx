@@ -52,7 +52,7 @@ const Upload = () => {
 
   const {handleSubmit, handleInputChange, inputs, setInputs} = useForm(
     doUpload,
-    initValues,
+    initValues
   );
 
   const resetForm = () => {
@@ -119,7 +119,7 @@ const Upload = () => {
         >
           {uploading ? 'Uploading..' : 'Upload'}
         </button>
-        <button onClick={resetForm} >Reset</button>
+        <button onClick={resetForm}>Reset</button>
         <p>{uploadResult}</p>
       </form>
     </>

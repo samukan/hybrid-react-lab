@@ -21,13 +21,13 @@ const useMedia = () => {
       try {
         // kaikki mediat ilman omistajan tietoja
         const media = await fetchData<MediaItem[]>(
-          import.meta.env.VITE_MEDIA_API + '/media',
+          import.meta.env.VITE_MEDIA_API + '/media'
         );
         // haetaan omistajat id:n perusteella
         const mediaWithOwner: MediaItemWithOwner[] = await Promise.all(
           media.map(async (item) => {
             const owner = await fetchData<UserWithNoPassword>(
-              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id,
+              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id
             );
 
             const mediaItem: MediaItemWithOwner = {
@@ -35,7 +35,7 @@ const useMedia = () => {
               username: owner.username,
             };
             return mediaItem;
-          }),
+          })
         );
 
         console.log(mediaWithOwner);
@@ -52,7 +52,7 @@ const useMedia = () => {
   const postMedia = async (
     file: UploadResponse,
     inputs: Record<string, string>,
-    token: string,
+    token: string
   ) => {
     // create a suitable object for Media API,
     // the type is MediaItem without media_id, user_id, thumbnail and created_at.
@@ -77,7 +77,10 @@ const useMedia = () => {
       },
       body: JSON.stringify(media),
     };
-    return await fetchData<MessageResponse>(import.meta.env.VITE_MEDIA_API + '/media', options);
+    return await fetchData<MessageResponse>(
+      import.meta.env.VITE_MEDIA_API + '/media',
+      options
+    );
   };
 
   return {mediaArray, postMedia};
@@ -97,7 +100,7 @@ const useFile = () => {
     };
     return await fetchData<UploadResponse>(
       import.meta.env.VITE_UPLOAD_API + '/upload',
-      options,
+      options
     );
   };
   return {postFile};
@@ -113,7 +116,7 @@ const useAuthentication = () => {
     try {
       return await fetchData<LoginResponse>(
         import.meta.env.VITE_AUTH_API + '/auth/login',
-        options,
+        options
       );
     } catch (error) {
       throw new Error((error as Error).message);
@@ -132,7 +135,7 @@ const useUser = () => {
     try {
       return await fetchData<UserResponse>(
         import.meta.env.VITE_AUTH_API + '/users/token',
-        options,
+        options
       );
     } catch (error) {
       throw error as Error;
@@ -148,7 +151,7 @@ const useUser = () => {
     try {
       return await fetchData<UserResponse>(
         import.meta.env.VITE_AUTH_API + '/users',
-        options,
+        options
       );
     } catch (error) {
       throw new Error((error as Error).message);

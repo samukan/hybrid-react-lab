@@ -2,9 +2,13 @@ import {useForm} from '../hooks/formHooks';
 import {Credentials} from '../types/LocalTypes';
 import {useUserContext} from '../hooks/ContextHooks';
 
+<<<<<<< HEAD
 const LoginForm = (props: {
   toggleRegister: () => void;
 }) => {
+=======
+const LoginForm = (props: {toggleRegister: () => void}) => {
+>>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
   const {toggleRegister} = props;
   const {handleLogin} = useUserContext();
   const initValues: Credentials = {
@@ -23,7 +27,11 @@ const LoginForm = (props: {
 
   const {handleSubmit, handleInputChange, inputs} = useForm(
     doLogin,
+<<<<<<< HEAD
     initValues,
+=======
+    initValues
+>>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
   );
 
   return (

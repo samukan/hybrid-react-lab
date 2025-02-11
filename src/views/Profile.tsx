@@ -6,6 +6,7 @@ const Profile = () => {
   return (
     <>
       <h2>Profile</h2>
+<<<<<<< HEAD
       {user && (
         <>
           <p>
@@ -15,6 +16,14 @@ const Profile = () => {
           <p>Registered: {new Date(user.created_at).toLocaleString('fi-FI')}</p>
         </>
       )}
+=======
+      <p>{user?.username}</p>
+      <p>{user?.email}</p>
+      <p>{user?.level_name}</p>
+      <p>
+        {user?.created_at && new Date(user.created_at).toLocaleString('fi-FI')}
+      </p>
+>>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
     </>
   );
 };

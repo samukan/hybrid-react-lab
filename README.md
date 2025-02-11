@@ -1,4 +1,6 @@
-https://users.metropolia.fi/~samukan/tailwind
+# LINKKI VERKKOLEVYLLE
+
+https://users.metropolia.fi/~samukan/upload
 
 # React + TypeScript + Vite
 
@@ -51,4 +53,4 @@ export default tseslint.config({
 });
 ```
 
-# hybrid-react-lab-25
+# hybrid-react-lab
