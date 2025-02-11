@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {useState} from 'react';
-=======
-import React, {useState} from 'react';
->>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
 
 const useForm = (callback: () => void, initState: Record<string, string>) => {
   const [inputs, setInputs] = useState(initState);
@@ -15,17 +11,10 @@ const useForm = (callback: () => void, initState: Record<string, string>) => {
   };
 
   const handleInputChange = (
-<<<<<<< HEAD
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    event.persist();
-    // console.log(event.target.name, event.target.value);
-=======
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     event.persist();
-    console.log(event.target.name, event.target.value);
->>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
+    // console.log(event.target.name, event.target.value);
     setInputs((inputs) => ({
       ...inputs,
       [event.target.name]: event.target.value,
@@ -36,10 +25,7 @@ const useForm = (callback: () => void, initState: Record<string, string>) => {
     handleSubmit,
     handleInputChange,
     inputs,
-<<<<<<< HEAD
     setInputs,
-=======
->>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
   };
 };
 

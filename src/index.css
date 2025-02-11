@@ -69,10 +69,6 @@ td a {
 
 /* media item dialog */
 dialog {
-<<<<<<< HEAD
-=======
-  position: fixed;
->>>>>>> ab877c77d0810a04ef12d200cd7426ef61e49486
   height: 90%;
   background: rgba(0, 0, 0, 0.8);
   z-index: 9999;
