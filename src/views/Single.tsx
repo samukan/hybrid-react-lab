@@ -6,6 +6,15 @@ const Single = () => {
   const navigate: NavigateFunction = useNavigate();
   const {state} = useLocation();
   const item: MediaItemWithOwner = state.item;
+
+  // Test functionality: allow setting a dummy token if one does not exist
+  const setTestToken = () => {
+    if (!localStorage.getItem('token')) {
+      localStorage.setItem('token', 'test-token');
+      alert('Test token set');
+    }
+  };
+
   return (
     <>
       <h2>Single</h2>
@@ -15,6 +24,10 @@ const Single = () => {
         <img src={item.filename} alt={item.title} />
       ) : (
         <video src={item.filename} controls />
+      )}
+      {/* Added test button for setting a dummy token */}
+      {!localStorage.getItem('token') && (
+        <button onClick={setTestToken}>Set Test Token</button>
       )}
       <Likes item={item} />
       <p>{item.description}</p>
