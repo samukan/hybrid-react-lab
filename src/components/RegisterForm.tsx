@@ -1,9 +1,12 @@
+import {useEffect, useState} from 'react';
 import {useUser} from '../hooks/apiHooks';
 import {useForm} from '../hooks/formHooks';
 import {RegisterCredentials} from '../types/LocalTypes';
 
 const RegisterForm = () => {
-  const {postRegister} = useUser();
+  const [usernameAvailable, setUsernameAvailable] = useState(true);
+  const [emailAvailable, setEmailAvailable] = useState(true);
+  const {postRegister, getUserNameAvailable, getEmailAvailable} = useUser();
   const initValues: RegisterCredentials = {
     username: '',
     password: '',
@@ -13,75 +16,110 @@ const RegisterForm = () => {
   const doRegister = async () => {
     try {
       const registerResult = await postRegister(inputs as RegisterCredentials);
-      console.log('doRegister result', registerResult);
+      console.log('doLogin result', registerResult);
     } catch (error) {
       console.error((error as Error).message);
-      // Display error to user here if desired.
+      // Display error to user here(?)
     }
   };
 
   const {handleSubmit, handleInputChange, inputs} = useForm(
     doRegister,
-    initValues
+    initValues,
   );
 
+  useEffect(() => {
+    const main = async () => {
+      // kutsu getUsernameAvailable apiHooksista
+      try {
+        if (inputs.username.length > 2) {
+          const result = await getUserNameAvailable(inputs.username);
+          setUsernameAvailable(result.available);
+        } else {
+          setUsernameAvailable(true);
+        }
+      } catch (error) {
+        console.error((error as Error).message);
+        setUsernameAvailable(true);
+      }
+    };
+
+    main();
+  }, [inputs.username, getUserNameAvailable]);
+
+  useEffect(() => {
+    // kutsu getEmailAvailable apiHooksista
+    const main = async () => {
+      try {
+        if (inputs.email.length > 5) {
+          const result = await getEmailAvailable(inputs.email);
+          setEmailAvailable(result.available);
+        } else {
+          setEmailAvailable(true);
+        }
+      } catch (error) {
+        console.error((error as Error).message);
+        setEmailAvailable(true);
+      }
+    };
+    main();
+  }, [inputs.email, getEmailAvailable]);
+
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-gray-900 p-8 shadow-lg">
-      <h1 className="mb-6 text-center text-3xl font-bold">Register</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-col">
-          <label
-            htmlFor="regusername"
-            className="mb-1 font-medium text-gray-300"
-          >
-            Username
-          </label>
+    <>
+      <h1>Register</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center justify-center"
+      >
+        <div className="flex w-4/5 flex-col">
+          <label htmlFor="regusername">Username</label>
           <input
+            className="my-2.5 rounded-md border p-2.5"
             name="username"
             type="text"
             id="regusername"
             onChange={handleInputChange}
             autoComplete="username"
-            className="rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-stone-500 focus:outline-none"
           />
+          {!usernameAvailable && (
+            <p className="text-right text-red-500">Username not available</p>
+          )}
         </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="regpassword"
-            className="mb-1 font-medium text-gray-300"
-          >
-            Password
-          </label>
+        <div className="flex w-4/5 flex-col">
+          <label htmlFor="regpassword">Password</label>
           <input
+            className="my-2.5 rounded-md border-1 p-2.5"
             name="password"
             type="password"
             id="regpassword"
             onChange={handleInputChange}
             autoComplete="current-password"
-            className="rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-stone-500 focus:outline-none"
           />
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="regemail" className="mb-1 font-medium text-gray-300">
-            Email
-          </label>
+        <div className="flex w-4/5 flex-col">
+          <label htmlFor="regemail">Email</label>
           <input
+            className="my-2.5 rounded-md border-1 p-2.5"
             name="email"
             type="email"
             id="regemail"
             onChange={handleInputChange}
             autoComplete="email"
-            className="rounded border border-gray-300 px-3 py-2 text-gray-900 focus:border-stone-500 focus:outline-none"
           />
+
+          {!emailAvailable && (
+            <p className="text-right text-red-500">Email not available</p>
+          )}
         </div>
         <button
+          className="my-2.5 block w-4/5 rounded-md bg-stone-500 p-2 text-center transition-all duration-500 ease-in-out hover:bg-stone-700"
           type="submit"
-          className="w-full rounded bg-stone-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-stone-700"
         >
           Register
         </button>
       </form>
-    </div>
+    </>
   );
 };
 

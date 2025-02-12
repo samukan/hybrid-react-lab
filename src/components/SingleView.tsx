@@ -7,45 +7,32 @@ const SingleView = (props: {
   const {item, setSelectedItem} = props;
   console.log(item);
   return (
-    <dialog
-      open
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-    >
+    // TODO: Add JSX for displaying a mediafile here
+    // - use e.g. a <dialog> element for creating a modal
+    // - use item prop to render the media item details
+    // - use img tag for displaying images
+    // - use video tag for displaying videos
+    <dialog open>
       {item && (
-        <div className="relative w-full max-w-3xl rounded-lg bg-gray-900 p-6 text-white shadow-lg">
-          {/* Close button */}
+        <>
           <button
-            onClick={() => setSelectedItem(undefined)}
-            className="absolute top-4 right-4 text-white transition-colors duration-200 hover:text-red-400"
+            onClick={() => {
+              setSelectedItem(undefined);
+            }}
           >
             Close
           </button>
-          {/* Title */}
-          <h3 className="mb-2 text-2xl font-bold">{item.title}</h3>
-          {/* Date */}
-          <p className="mb-4 text-sm text-gray-400">
-            {new Date(item.created_at).toLocaleString('fi-FI')}
-          </p>
-          {/* Media Display */}
+          <h3>{item.title}</h3>
+          <p>{new Date(item.created_at).toLocaleString('fi-FI')}</p>
           {item.media_type.includes('image') ? (
-            <img
-              src={item.filename}
-              alt={item.title}
-              className="mb-4 h-auto w-full rounded object-contain"
-            />
+            <img src={item.filename} alt={item.title} />
           ) : (
-            <video
-              src={item.filename}
-              controls
-              className="mb-4 h-auto w-full rounded object-contain"
-            />
+            <video src={item.filename} controls />
           )}
-          {/* Description */}
           <p>{item.description}</p>
-        </div>
+        </>
       )}
     </dialog>
   );
 };
-
 export default SingleView;

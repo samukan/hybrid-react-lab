@@ -8,59 +8,64 @@ type MediaItemProps = {
 };
 
 const MediaRow = (props: MediaItemProps) => {
-  const {item, setSelectedItem} = props;
   const {user} = useUserContext();
-
-  const showEditDelete =
-    user && (user.level_name === 'Admin' || user.username === item.username);
-
+  const {item} = props;
   return (
-    <tr className="bg-gray-800 transition-colors duration-200 hover:bg-gray-700">
-      <td className="border-b border-gray-700 p-4">
-        <img
-          className="h-48 w-64 rounded object-cover"
-          src={
-            item.thumbnail ||
-            (item.screenshots && item.screenshots[2]) ||
-            undefined
-          }
-          alt={item.title}
-        />
-      </td>
-      <td className="border-b border-gray-700 p-4">{item.title}</td>
-      <td className="border-b border-gray-700 p-4">{item.description}</td>
-      <td className="border-b border-gray-700 p-4">
-        {new Date(item.created_at).toLocaleString('fi-FI')}
-      </td>
-      <td className="border-b border-gray-700 p-4">{item.filesize}</td>
-      <td className="border-b border-gray-700 p-4">{item.media_type}</td>
-      <td className="border-b border-gray-700 p-4">{item.username}</td>
-      <td className="border-b border-gray-700 p-4">
-        <Link
-          to="/single"
-          state={{item}}
-          className="rounded bg-stone-600 px-3 py-1 text-white transition-colors duration-200 hover:bg-stone-700"
-        >
-          Show
-        </Link>
-      </td>
-      {showEditDelete && (
-        <td className="border-b border-gray-700 p-4">
-          <button
-            className="mr-2 rounded bg-stone-600 px-3 py-1 text-white transition-colors duration-200 hover:bg-stone-700"
-            onClick={() => console.log('modify', item)}
+    <article className="w-full rounded-md bg-stone-600">
+      <img
+        className="h-72 w-full rounded-t-md object-cover"
+        src={
+          item.thumbnail ||
+          (item.screenshots && item.screenshots[2]) ||
+          undefined
+        }
+        alt={item.title}
+      />
+      <div className="p-4">
+        <h3 className="text-center">{item.title}</h3>
+        <p className="max-w-full overflow-clip font-bold text-nowrap text-ellipsis text-stone-300">
+          {item.description}
+        </p>
+        <div className="my-2 rounded-md border-1 border-stone-400 p-2">
+          <p>
+            Created at: <br />{' '}
+            {new Date(item.created_at).toLocaleString('fi-FI')}
+          </p>
+          <p>Filesize: {(item.filesize / 1024 / 1024).toFixed(2)} MB</p>
+          <p>Mime-type: {item.media_type}</p>
+          <p>Owner: {item.username}</p>
+        </div>
+        <p>
+          <Link
+            className="block w-full bg-stone-500 p-2 text-center transition-all duration-500 ease-in-out hover:bg-stone-700"
+            to="/single"
+            state={{item}}
           >
-            Modify
-          </button>
-          <button
-            className="rounded bg-stone-600 px-3 py-1 text-white transition-colors duration-200 hover:bg-stone-700"
-            onClick={() => console.log('delete', item)}
-          >
-            Delete
-          </button>
-        </td>
-      )}
-    </tr>
+            Show
+          </Link>
+          {(user?.user_id === item.user_id || user?.level_name === 'Admin') && (
+            <>
+              <button
+                onClick={() => {
+                  console.log('Modify painettu', item.media_id);
+                }}
+                className="block w-full bg-indigo-400 p-2 text-center transition-all duration-500 ease-in-out hover:bg-indigo-700"
+              >
+                Modify
+              </button>
+              <button
+                onClick={() => {
+                  console.log('Delete painettu', item.media_id);
+                }}
+                className="block w-full bg-orange-400 p-2 text-center transition-all duration-500 ease-in-out hover:bg-orange-700"
+              >
+                Delete
+              </button>
+            </>
+          )}
+        </p>
+      </div>
+    </article>
   );
 };
 
