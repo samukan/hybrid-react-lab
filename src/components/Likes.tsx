@@ -43,7 +43,7 @@ const Likes = ({item}: {item: MediaItemWithOwner | null}) => {
     if (!item || !token) return;
     try {
       const userLike = await getUserLike(item.media_id, token);
-      likeDispatch({type: 'like', like: userLike});
+      likeDispatch({type: 'like', like: userLike as unknown as Like});
     } catch (e) {
       likeDispatch({type: 'like', like: null});
       console.error('get user like error', (e as Error).message);
