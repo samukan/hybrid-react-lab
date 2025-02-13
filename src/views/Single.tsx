@@ -1,20 +1,12 @@
 import {MediaItemWithOwner} from 'hybrid-types/DBTypes';
 import {NavigateFunction, useLocation, useNavigate} from 'react-router';
 import Likes from '../components/Likes';
+import Comments from '../components/Comments';
 
 const Single = () => {
   const navigate: NavigateFunction = useNavigate();
   const {state} = useLocation();
   const item: MediaItemWithOwner = state.item;
-
-  // Test functionality: allow setting a dummy token if one does not exist
-  const setTestToken = () => {
-    if (!localStorage.getItem('token')) {
-      localStorage.setItem('token', 'test-token');
-      alert('Test token set');
-    }
-  };
-
   return (
     <>
       <h2>Single</h2>
@@ -25,19 +17,17 @@ const Single = () => {
       ) : (
         <video src={item.filename} controls />
       )}
-      {/* Added test button for setting a dummy token */}
-      {!localStorage.getItem('token') && (
-        <button onClick={setTestToken}>Set Test Token</button>
-      )}
       <Likes item={item} />
       <p>{item.description}</p>
       <p>Owner: {item.username}</p>
       <p>Type: {item.media_type}</p>
       <p>Size: {Math.round(item.filesize / 1024)} kB</p>
+      <Comments item={item} />
       <button
         onClick={() => {
           navigate(-1);
         }}
+        className="block w-full bg-indigo-400 p-2 text-center transition-all duration-500 ease-in-out hover:bg-indigo-700"
       >
         go back
       </button>
