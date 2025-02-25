@@ -1,6 +1,6 @@
-# Linkki verkkolevylle
+## Linkki verkkolevylle
 
-https://users.metropolia.fi/~samukan/zustand
+- https://users.metropolia.fi/~samukan/zustand
 
 # React + TypeScript + Vite
 
