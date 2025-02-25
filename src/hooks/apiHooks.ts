@@ -1,7 +1,9 @@
 import {
+  Comment,
   Like,
   MediaItem,
   MediaItemWithOwner,
+  User,
   UserWithNoPassword,
 } from 'hybrid-types/DBTypes';
 import {useEffect, useState} from 'react';
@@ -242,7 +244,6 @@ const useComment = () => {
     user_id: number,
     token: string,
   ) => {
-    // TODO: Send a POST request to /comments with the comment object and the token in the Authorization header.
     const options = {
       method: 'POST',
       headers: {
@@ -252,18 +253,26 @@ const useComment = () => {
       body: JSON.stringify({comment_text, media_id, user_id}),
     };
     return await fetchData(
-      import.meta.env.VITE_COMMENT_API + '/comments',
+      import.meta.env.VITE_MEDIA_API + '/comments',
       options,
     );
   };
 
   const getCommentsByMediaId = async (media_id: number) => {
-    // TODO: Send a GET request to /comments/bymedia/:media_id to get the comments.
-    // TODO: Send a GET request to auth API to add username to all comments as needed.
-    return await fetchData(
-      import.meta.env.VITE_COMMENT_API + `/comments/bymedia/${media_id}`,
+    const comments = await fetchData<Comment[]>(
+      import.meta.env.VITE_MEDIA_API + `/comments/bymedia/${media_id}`,
       {method: 'GET'},
     );
+    const updatedComments = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await fetchData<User>(
+          import.meta.env.VITE_AUTH_API + '/users/' + comment.user_id,
+          {method: 'GET'},
+        );
+        return {...comment, username: user.username};
+      }),
+    );
+    return updatedComments;
   };
 
   return {postComment, getComments: getCommentsByMediaId};

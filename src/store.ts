@@ -3,11 +3,16 @@ import {create} from 'zustand';
 
 type CommentStore = {
   comments: Partial<Comment & {username: string}>[];
+  setComments: (comments: Partial<Comment & {username: string}>[]) => void;
   addComment: (comment: Partial<Comment & {username: string}>) => void;
 };
 
 export const useCommentStore = create<CommentStore>((set) => ({
   comments: [],
+  setComments: (comments) =>
+    set(() => ({
+      comments: comments,
+    })),
   addComment: (comment) =>
     set((state) => ({
       comments: [
