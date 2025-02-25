@@ -3,7 +3,6 @@ import MediaRow from '../components/MediaRow';
 import {useState} from 'react';
 import SingleView from '../components/SingleView';
 import {useMedia} from '../hooks/apiHooks';
-import TryReducerCounter from '../components/TryReducerCounter';
 
 const Home = () => {
   const [selectedItem, setSelectedItem] = useState<
